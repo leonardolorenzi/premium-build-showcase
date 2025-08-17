@@ -1,9 +1,12 @@
 import { Paintbrush, Building2, Hammer, Layers, Sparkles, Home } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useServicesData } from '@/hooks/useSanity';
 
 const Services = () => {
-  const services = [
+  const { data: servicesData } = useServicesData();
+  
+  const defaultServices = [
     {
       icon: <Paintbrush className="w-8 h-8 text-gold" />,
       title: 'Luxury Painting',
@@ -41,6 +44,27 @@ const Services = () => {
       features: ['Luxury Vinyl Tile', 'Professional Installation', 'Various Styles', 'Water Resistant']
     }
   ];
+
+  // Map CMS services to include icons
+  const getServiceIcon = (iconName: string) => {
+    const icons: any = {
+      'Brush': <Paintbrush className="w-8 h-8 text-gold" />,
+      'Building': <Building2 className="w-8 h-8 text-gold" />,
+      'Square': <Hammer className="w-8 h-8 text-gold" />,
+      'Grid3x3': <Layers className="w-8 h-8 text-gold" />,
+      'Wrench': <Sparkles className="w-8 h-8 text-gold" />,
+      'Hammer': <Home className="w-8 h-8 text-gold" />
+    };
+    return icons[iconName] || <Paintbrush className="w-8 h-8 text-gold" />;
+  };
+
+  const services = Array.isArray(servicesData) && servicesData.length > 0 
+    ? servicesData.map((service: any) => ({
+        ...service,
+        icon: getServiceIcon(service.icon),
+        features: service.features || []
+      }))
+    : defaultServices;
 
   return (
     <section id="services" className="py-20 bg-background">

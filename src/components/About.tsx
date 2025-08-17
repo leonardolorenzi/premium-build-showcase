@@ -1,7 +1,10 @@
 import { Award, Shield, Users, Target } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useAboutData } from '@/hooks/useSanity';
 
 const About = () => {
+  const { data: aboutData } = useAboutData();
+  
   const founders = [
     {
       name: 'Leonardo Henrique Prestes Lorenzi',
@@ -43,13 +46,12 @@ const About = () => {
           {/* Header */}
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-foreground">About </span>
-              <span className="text-gradient-gold">Gold Standard</span>
+              <span className="text-foreground">{aboutData.title?.split(' ').slice(0, 1).join(' ') || 'About'} </span>
+              <span className="text-gradient-gold">{aboutData.title?.split(' ').slice(1).join(' ') || 'Gold Standard'}</span>
             </h2>
             <div className="w-24 h-1 bg-gold mx-auto mb-6"></div>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Founded on the principles of excellence and integrity, Gold Standard Constructions LLC 
-              delivers premium construction and painting services that exceed expectations.
+              {aboutData.description?.split('.')[0] || 'Founded on the principles of excellence and integrity, Gold Standard Constructions LLC delivers premium construction and painting services that exceed expectations'}.
             </p>
           </div>
 
@@ -63,14 +65,11 @@ const About = () => {
               
               <div className="space-y-4 text-muted-foreground mb-8">
                 <p>
-                  Gold Standard Constructions LLC specializes in luxury residential and commercial 
-                  painting, sheetrock & taping, trimming & cabinets, epoxy flooring, and LVT flooring. 
-                  Our commitment to quality and client satisfaction has made us a trusted name in 
-                  construction throughout New Jersey.
+                  {aboutData.description || 'Gold Standard Constructions LLC specializes in luxury residential and commercial painting, sheetrock & taping, trimming & cabinets, epoxy flooring, and LVT flooring. Our commitment to quality and client satisfaction has made us a trusted name in construction throughout New Jersey.'}
                 </p>
                 
                 <p>
-                  Founded by Leonardo Henrique Prestes Lorenzi and Edson Da Silva, our company 
+                  Founded by {aboutData.founders || 'Leonardo Henrique Prestes Lorenzi and Edson Da Silva'}, our company 
                   delivers high-quality, sustainable, and client-focused construction services. 
                   Every project is approached with meticulous attention to detail and a dedication 
                   to exceeding expectations.
@@ -88,12 +87,8 @@ const About = () => {
                 <h4 className="text-lg font-semibold mb-4 text-gold">Company Information</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-muted-foreground">EIN:</span>
-                    <span className="ml-2 text-foreground">33-2032997</span>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Entity ID:</span>
-                    <span className="ml-2 text-foreground">0451180341</span>
+                    <span className="text-muted-foreground">License:</span>
+                    <span className="ml-2 text-foreground">{aboutData.license || 'EIN 33-2032997, Entity ID 0451180341'}</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Licensed in:</span>

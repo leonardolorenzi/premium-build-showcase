@@ -1,8 +1,11 @@
 import { Star, Quote } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useTestimonialsData } from '@/hooks/useSanity';
 
 const Testimonials = () => {
-  const testimonials = [
+  const { data: testimonialsData } = useTestimonialsData();
+  
+  const defaultTestimonials = [
     {
       id: 1,
       name: 'Michael Rodriguez',
@@ -52,6 +55,17 @@ const Testimonials = () => {
       text: 'The LVT flooring installation was completed perfectly and on schedule. The team was respectful, clean, and the final result is stunning.'
     }
   ];
+
+  const testimonials = Array.isArray(testimonialsData) && testimonialsData.length > 0 
+    ? testimonialsData.map((testimonial: any, index: number) => ({
+        id: index + 1,
+        name: testimonial.name,
+        location: testimonial.role, // Using role field for location/title
+        project: testimonial.role,
+        rating: testimonial.rating || 5,
+        text: testimonial.content
+      }))
+    : defaultTestimonials;
 
   return (
     <section className="py-20 bg-card">

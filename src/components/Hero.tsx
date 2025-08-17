@@ -1,14 +1,23 @@
 import { ArrowRight, Star, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import heroImage from '@/assets/hero-construction.jpg';
+import { useHeroData } from '@/hooks/useSanity';
+import { urlFor } from '@/lib/sanity';
 
 const Hero = () => {
+  const { data: heroData } = useHeroData();
+  
+  // Use CMS image if available, otherwise fallback to default
+  const backgroundImage = (heroData as any).backgroundImage 
+    ? urlFor((heroData as any).backgroundImage).url() 
+    : heroImage;
+
   return (
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src={heroImage}
+          src={backgroundImage}
           alt="Luxury construction and painting services"
           className="w-full h-full object-cover"
         />
@@ -27,15 +36,14 @@ const Hero = () => {
 
             {/* Main Headline */}
             <h1 className="text-4xl md:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
-              <span className="text-foreground">Luxury Craftsmanship,</span>
+              <span className="text-foreground">{heroData.title?.split(', ')[0] || 'Luxury Craftsmanship'},</span>
               <br />
-              <span className="text-gradient-gold">Built to Last</span>
+              <span className="text-gradient-gold">{heroData.title?.split(', ')[1] || 'Built to Last'}</span>
             </h1>
 
             {/* Subheading */}
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl">
-              Premium residential & commercial construction services delivering 
-              exceptional quality and sustainable solutions in Newark & Kearny, NJ.
+              {heroData.subtitle || 'Premium residential & commercial construction services delivering exceptional quality and sustainable solutions in Newark & Kearny, NJ.'}
             </p>
 
             {/* Features */}
@@ -59,7 +67,7 @@ const Hero = () => {
                 size="lg" 
                 className="gradient-gold text-dark font-semibold text-lg px-8 py-4 shadow-gold hover-lift group"
               >
-                Request Free Quote
+                {heroData.buttonText || 'Request Free Quote'}
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               

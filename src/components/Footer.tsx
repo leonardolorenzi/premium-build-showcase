@@ -1,18 +1,21 @@
 import { MapPin, Phone, Mail, Instagram, Linkedin, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useContactData, useSiteSettings } from '@/hooks/useSanity';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { data: contactData } = useContactData();
+  const { data: siteSettings } = useSiteSettings();
 
   const socialLinks = [
     {
       name: 'Instagram',
-      url: 'https://instagram.com/GoldStandardConstructions',
+      url: contactData.social?.instagram || 'https://instagram.com/GoldStandardConstructions',
       icon: <Instagram className="w-5 h-5" />
     },
     {
       name: 'LinkedIn',
-      url: 'https://linkedin.com/company/gold-standard-constructions',
+      url: contactData.social?.linkedin || 'https://linkedin.com/company/gold-standard-constructions',
       icon: <Linkedin className="w-5 h-5" />
     }
   ];
@@ -58,23 +61,29 @@ const Footer = () => {
               </p>
 
               {/* Contact Info */}
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3 text-sm">
-                  <Phone className="w-4 h-4 text-gold" />
-                  <span className="text-muted-foreground">(973) 417-1404</span>
-                </div>
-                <div className="flex items-center space-x-3 text-sm">
-                  <Mail className="w-4 h-4 text-gold" />
-                  <span className="text-muted-foreground">contact@goldstandardconstructions.com</span>
-                </div>
-                <div className="flex items-start space-x-3 text-sm">
-                  <MapPin className="w-4 h-4 text-gold mt-0.5" />
-                  <div className="text-muted-foreground">
-                    <div>Newark, NJ</div>
-                    <div>Kearny, NJ</div>
-                  </div>
-                </div>
-              </div>
+               <div className="space-y-3">
+                 <div className="flex items-center space-x-3 text-sm">
+                   <Phone className="w-4 h-4 text-gold" />
+                   <span className="text-muted-foreground">{contactData.phone || '(973) 417-1404'}</span>
+                 </div>
+                 <div className="flex items-center space-x-3 text-sm">
+                   <Mail className="w-4 h-4 text-gold" />
+                   <span className="text-muted-foreground">{contactData.email || 'contact@goldstandardconstructions.com'}</span>
+                 </div>
+                 <div className="flex items-start space-x-3 text-sm">
+                   <MapPin className="w-4 h-4 text-gold mt-0.5" />
+                   <div className="text-muted-foreground">
+                     {contactData.addresses?.map((addr: any, index: number) => (
+                       <div key={index}>{addr.city}, {addr.state}</div>
+                     )) || (
+                       <>
+                         <div>Newark, NJ</div>
+                         <div>Kearny, NJ</div>
+                       </>
+                     )}
+                   </div>
+                 </div>
+               </div>
             </div>
 
             {/* Services */}
@@ -152,7 +161,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Copyright */}
             <div className="text-sm text-muted-foreground">
-              <p>&copy; {currentYear} Gold Standard Constructions LLC. All rights reserved.</p>
+              <p>{siteSettings.footerText || `© ${currentYear} Gold Standard Constructions LLC. All rights reserved.`}</p>
             </div>
 
             {/* Legal Links & Company Details */}

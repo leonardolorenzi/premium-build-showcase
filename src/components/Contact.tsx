@@ -5,9 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { useContactData } from '@/hooks/useSanity';
 
 const Contact = () => {
   const { toast } = useToast();
+  const { data: contactData } = useContactData();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -28,19 +30,19 @@ const Contact = () => {
     {
       icon: <Phone className="w-6 h-6 text-gold" />,
       title: 'Phone',
-      details: '(973) 417-1404',
+      details: contactData.phone || '(973) 417-1404',
       subtitle: 'Call us anytime'
     },
     {
       icon: <Mail className="w-6 h-6 text-gold" />,
       title: 'Email',
-      details: 'contact@goldstandardconstructions.com',
+      details: contactData.email || 'contact@goldstandardconstructions.com',
       subtitle: 'We respond within 24hrs'
     },
     {
       icon: <MapPin className="w-6 h-6 text-gold" />,
       title: 'Locations',
-      details: 'Newark & Kearny, NJ',
+      details: contactData.addresses?.map((addr: any) => `${addr.city}, ${addr.state}`).join(' & ') || 'Newark & Kearny, NJ',
       subtitle: 'Serving all of New Jersey'
     },
     {
@@ -58,13 +60,12 @@ const Contact = () => {
           {/* Header */}
           <div className="text-center mb-16 animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-foreground">Get Your Free </span>
-              <span className="text-gradient-gold">Estimate</span>
+              <span className="text-foreground">{contactData.title?.split(' ').slice(0, 3).join(' ') || 'Get Your Free'} </span>
+              <span className="text-gradient-gold">{contactData.title?.split(' ').slice(3).join(' ') || 'Estimate'}</span>
             </h2>
             <div className="w-24 h-1 bg-gold mx-auto mb-6"></div>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Ready to transform your space? Contact us today for a complimentary 
-              consultation and detailed project estimate.
+              {contactData.description || 'Ready to transform your space? Contact us today for a complimentary consultation and detailed project estimate.'}
             </p>
           </div>
 
